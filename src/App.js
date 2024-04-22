@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const [response, setResponse] = useState('');
+
+  const handleClick = () => {
+    const requestBody = {
+      "a2f_player": "/World/Graphs/LazyGraph/Player"
+    };
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    };
+
+    console.log('Request Options:', requestOptions);
+
+    fetch('/A2F/Player/Play', requestOptions)
+      .then(res => res.json())
+      .then(data => setResponse(JSON.stringify(data)))
+      .catch(error => setResponse(`Error: ${error}`));
+  };
+
+  useEffect(() => {
+    handleClick();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleClick}>Send API Request</button>
+      <pre>{response}</pre>
     </div>
   );
 }
